@@ -7,7 +7,7 @@ from fastapi import FastAPI, File, UploadFile, Form, HTTPException, BackgroundTa
 from fastapi.responses import HTMLResponse, JSONResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-# from fastapi.middleware.proxies import ProxyHeadersMiddleware
+from fastapi.middleware.proxies import ProxyHeadersMiddleware
 from typing import Optional
 import os
 import uuid
@@ -46,7 +46,14 @@ app = FastAPI(
 # Security middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*", "http://localhost:3000", "http://localhost:5173", "http://localhost:5174"],
+    allow_origins=[
+        "*", 
+        "http://localhost:3000", 
+        "http://localhost:5173", 
+        "http://localhost:5174",
+        "https://securesteg-frontend.onrender.com",
+        "https://*.onrender.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -58,6 +65,12 @@ if allowed_hosts == ["*"]:
     allowed_hosts = ["*"]
 else:
     allowed_hosts = [h.strip() for h in allowed_hosts] + ["localhost", "127.0.0.1", "*.localhost"]
+
+app.add_middleware(ProxyHeadersMiddleware)
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=allowed_hosts
+)
 # app.add_middleware(ProxyHeadersMiddleware)
 app.add_middleware(
     TrustedHostMiddleware,
