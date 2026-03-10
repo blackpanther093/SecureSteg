@@ -58,14 +58,6 @@ app.add_middleware(
     expose_headers=["X-Metadata", "X-Session-ID"],
 )
 
-allowed_hosts_str = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,*.onrender.com")
-allowed_hosts = [h.strip() for h in allowed_hosts_str.split(",")]
-# app.add_middleware(ProxyHeadersMiddleware)
-app.add_middleware(
-    TrustedHostMiddleware,
-    allowed_hosts=allowed_hosts
-)
-
 DECODE_STATE: dict[str, int] = {}
 OUTPUT_CACHE: dict[str, dict] = {}
 OUTPUT_TTL_SECONDS = 15 * 60
