@@ -7,7 +7,6 @@ from fastapi import FastAPI, File, UploadFile, Form, HTTPException, BackgroundTa
 from fastapi.responses import HTMLResponse, JSONResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from fastapi.middleware.proxies import ProxyHeadersMiddleware
 from typing import Optional
 import os
 import uuid
@@ -60,13 +59,11 @@ app.add_middleware(
     expose_headers=["X-Metadata", "X-Session-ID"],
 )
 
-allowed_hosts = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
-if allowed_hosts == ["*"]:
-    allowed_hosts = ["*"]
-else:
-    allowed_hosts = [h.strip() for h in allowed_hosts] + ["localhost", "127.0.0.1", "*.localhost"]
+allowed_hosts_str = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,*.onrender.com")
+allowed_hosts = [h.strip() for h in allowed_hosts_str.split(",")]
+if "*" not in allowed_hosts:
+    allowed_hosts = allowed_hosts + ["localhost", "127.0.0.1", "*.localhost"]
 
-app.add_middleware(ProxyHeadersMiddleware)
 app.add_middleware(
     TrustedHostMiddleware,
     allowed_hosts=allowed_hosts
