@@ -1,0 +1,32 @@
+# Backend dependencies for SecureSteg platform
+
+# Web Framework
+fastapi==0.104.1
+uvicorn==0.24.0
+python-multipart==0.0.6
+
+# Cryptography
+cryptography==41.0.7
+pycryptodomex==3.18.0
+argon2-cffi==23.1.0
+
+# Image Processing
+opencv-python==4.8.1.78
+Pillow==10.1.0
+numpy==1.26.3
+
+# Audio Processing (optional, for future enhancement)
+librosa==0.10.0
+soundfile==0.12.1
+
+# Data Processing
+scipy==1.12.0
+
+# Utilities
+python-dotenv==1.0.0
+requests==2.31.0
+
+# Development
+pytest==7.4.3
+black==23.11.0
+flake8==6.1.0

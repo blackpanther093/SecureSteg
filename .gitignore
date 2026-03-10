@@ -1,0 +1,116 @@
+# ─── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.pyo
+*.pyd
+
+# ─── Virtual Environments ─────────────────────────────────
+.venv/
+venv/
+env/
+myenv/
+*.venv
+ENV/
+
+# ─── Environment / Secrets ────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.env
+!.env.example
+
+# ─── Uploads / Runtime Data ───────────────────────────────
+uploads/
+backend/uploads/
+*.tmp
+*.temp
+
+# ─── Pytest / Coverage ────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+
+# ─── Node / Frontend ──────────────────────────────────────
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+.npm
+*.tsbuildinfo
+
+# ─── Vite ─────────────────────────────────────────────────
+frontend/.vite/
+
+# ─── OS Generated ─────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ─── IDE / Editor ─────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.code-workspace
+.history/
+
+# ─── Logs ─────────────────────────────────────────────────
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── Test / Misc artifacts ────────────────────────────────
+test_output/
+*.bak
+*.orig
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/yarn-error.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/.DS_Store
+
+# Backend
+backend/.pytest_cache/
+backend/.coverage
+backend/htmlcov/
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
+
+# OS
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*.swo
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
