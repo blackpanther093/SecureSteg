@@ -129,7 +129,16 @@ export const EmbedMode = () => {
     }
   }
 
-  const maxCapacity = capacityInfo?.capacities?.multi_layer?.max_capacity_kb || 0
+  const methodToCapacityKey = {
+    auto: 'multi_layer_lsb',
+    multi_layer_lsb: 'multi_layer_lsb',
+    lsb: 'lsb',
+    dct: 'dct',
+    spread_spectrum: 'spread_spectrum',
+    histogram_shifting: 'histogram_shifting',
+  }
+  const capacityKey = methodToCapacityKey[embeddingMethod] || 'multi_layer_lsb'
+  const maxCapacity = capacityInfo?.capacities?.[capacityKey]?.max_capacity_kb || 0
   const contentSizeKb = contentMode === 'file' && secretFileToHide
     ? secretFileToHide.size / 1024
     : new Blob([secretMessage]).size / 1024

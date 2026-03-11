@@ -56,6 +56,21 @@ OUTPUT_CACHE: dict[str, dict] = {}
 OUTPUT_TTL_SECONDS = 15 * 60
 
 
+def _normalize_image_method(method: str) -> str:
+    """Normalize frontend method names to backend capacity keys."""
+    if method in ("auto", "multi_layer_lsb"):
+        return "multi_layer"
+    return method
+
+
+def _image_capacity_for_method(image_array: np.ndarray, method: str) -> dict:
+    """Return capacity info using normalized method aliases."""
+    normalized = _normalize_image_method(method)
+    info = CapacityCalculator.calculate_image_capacity(image_array, normalized)
+    info["requested_method"] = method
+    return info
+
+
 def _prune_output_cache() -> None:
     cutoff = time.time() - OUTPUT_TTL_SECONDS
     expired_keys = [key for key, value in OUTPUT_CACHE.items() if value.get("created_at", 0) < cutoff]
@@ -240,9 +255,9 @@ async def calculate_capacity(file: UploadFile = File(...)):
                 raise HTTPException(status_code=400, detail="Invalid image file")
             
             capacities = {}
-            for method in ['lsb', 'multi_layer', 'dct']:
+            for method in ['lsb', 'multi_layer', 'multi_layer_lsb', 'dct', 'spread_spectrum', 'histogram_shifting']:
                 try:
-                    cap_info = CapacityCalculator.calculate_image_capacity(image_array, method)
+                    cap_info = _image_capacity_for_method(image_array, method)
                     capacities[method] = cap_info
                 except Exception as e:
                     capacities[method] = {"error": str(e)}
@@ -488,12 +503,18 @@ async def embed_data(
             if image_array is None:
                 raise HTTPException(status_code=400, detail="Invalid image file")
             
-            cap_info = CapacityCalculator.calculate_image_capacity(image_array, method if method != 'auto' else 'multi_layer')
+            requested_method = method if method != 'auto' else 'multi_layer_lsb'
+            cap_info = _image_capacity_for_method(image_array, requested_method)
             
             if len(full_payload) > cap_info['max_capacity_bytes']:
                 raise HTTPException(
                     status_code=413,
-                    detail=f"Payload too large for image. Max: {cap_info['max_capacity_bytes']} bytes"
+                    detail=(
+                        f"Payload too large for image. "
+                        f"Needed: {len(full_payload)} bytes, "
+                        f"Max: {cap_info['max_capacity_bytes']} bytes "
+                        f"(method: {cap_info['method']})."
+                    )
                 )
             
             steg = ImageSteganography(method=method if method != 'auto' else 'multi_layer_lsb')
